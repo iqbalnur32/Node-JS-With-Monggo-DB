@@ -9,19 +9,19 @@ exports.testData = (req, res) => {
 }
 
 // Get All Siswa
-exports.getAll = async (req, res) => {
-    await Siswa.find((err, rows) => {
+exports.getAll = async (req, res) => {  
+    await Siswa.find((err, result) => {
         res.json({
             status: 200,
-            data: rows
+            data: result
         })
     })
 }
 
 // Insert Siswa
 exports.createSiswa = async (req, res) => {
-    const {kelas, siswa, jurusan, id_siswa} = req.body;
-    const createSiswa = await Siswa.create({kelas: kelas, siswa: siswa, jurusan: jurusan, id_siswa:id_siswa});
+    const {id_siswa, kelas, siswa, jurusan} = req.body;
+    const createSiswa = await Siswa.create({id_siswa:id_siswa, kelas: kelas, siswa: siswa, jurusan: jurusan});
     if(createSiswa){
         res.json({
             status: 200,
@@ -90,4 +90,26 @@ exports.removeSiswa = async (req, res) => {
             msg: 'All fields cannot be null.'
         });
     } 
+}
+
+// Get Siswa by Params
+exports.getSiswaParams = async (req, res) => {
+    try{
+        const id_siswa  = req.params.id_siswa
+        const siswaParams = await Siswa.find({id_siswa: id_siswa})
+
+        if (siswaParams){
+            res.status(200).json({
+                data: siswaParams
+            })
+
+        } else {
+            res.status(401).json({
+                data: "gagal"
+            })
+        }
+
+    } catch (Error) {
+        console.log(Error)
+    }
 }
